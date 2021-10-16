@@ -1,4 +1,4 @@
-var numberNames = [
+let numberNames = [
     ["","milli","billi","trilli","quadrilli","quintilli","sextilli","septilli","octilli","nonilli","decilli"],
     ["novem","","un","duo","tre","quattuor","quin","sex","septen","octo"],
     ["","decillion","vigintillion","trigintillion","quadragintillion","quinquagintillion","sexagintillion","septuagintillion","octogintillion","nonagintillion"],
@@ -7,7 +7,7 @@ var numberNames = [
     ["K","million","billion","trillion","quadrillion","quintillion","sextillion","septillion","octillion","nonillion"]
 ];
 function toNumberName(number) {
-	var numberName = ["","","",""];
+	let numberName = ["","","",""];
     numberName[0] = numberNames[0][((number.abs().log10().sub(3)).div(3000)).floor().toNumber()];
 	if (number.abs().log10().mod(3000).greaterThanOrEqualTo(33)) {
 		numberName[1] = numberNames[1][((number.abs().log10().div(3)).floor()).mod(10).toNumber()];
