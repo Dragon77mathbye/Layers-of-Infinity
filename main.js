@@ -74,6 +74,14 @@ function maxAll() {
         }
     }
 }
+function prestige() {
+    alert("Coming soon!");
+}
+document.onkeypress = function (e) {
+    if (e.key === "m") {
+        maxAll();
+    }
+}
 function buyLayer(num) {
     if (game.money.greaterThanOrEqualTo(game.layers[num - 1].cost)) {
         game.money = game.money.sub(game.layers[num - 1].cost);

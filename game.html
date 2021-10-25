@@ -32,18 +32,21 @@
         }
         button:hover {
             background-color: #c0c0c0;
+            border-color: white;
         }
         .red {
             background-color: red;
         }
         .red:hover {
             background-color: #c06060;
+            border-color: red;
         }
         .lime {
             background-color: lime;
         }
         .lime:hover {
             background-color: #60c060;
+            border-color: lime;
         }
         .count {
             float: right;
@@ -58,19 +61,21 @@
 </head>
 <body>
     <p id="money" class="mainText">$1.00</p>
-    <button class="smallBtn" onclick="maxAll();" id="maxAllBtn">Max All</button>
+    <button class="smallBtn" onclick="maxAll();" id="maxAllBtn">Max All (M)</button>
+    <button class="smallBtn red" onclick="prestige();" id="prestigeBtn">Prestige</button>
     <span id="totalLayerCount" class="count">0 layers total</span>
     <div id="layers">
         <button onclick="buyLayer(1);" id="layer1">Purchase Layer 1 for $1.00</button>
         <span id="layer1count" class="count">0.00</span>
     </div>
     <div id="achievements">
-
+        <h2>Achievements</h2>
+        <p>Will (probably) be introduced in a future update, no promises</p>
     </div>
     <div id="about">
         <h2>About</h2>
         <p>The school thinks they can block all games, but they can't if I'm the one who made it!</p>
-        <p>Made by Dragon77mathbye</p>
+        <p>Made by Dragon77mathbye / Aston</p>
         <p>My friend made this one: <a href="https://gooseterv.github.io/FactoryGame">Factory Game</a></p>
     </div>
     <script src="ExpantaNum.js"></script>
