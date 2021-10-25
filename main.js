@@ -1,7 +1,6 @@
-// import ExpantaNum from "ExpantaNum.js";
-
 let game = [];
 let boughtLayers = 0;
+game.achievements = [];
 game.money = ExpantaNum(1);
 game.layers = [];
 game.interval = 20;
@@ -10,17 +9,19 @@ game.layers[0].count = ExpantaNum(0);
 game.layers[0].cost = ExpantaNum(1);
 game.layers[0].multiplier = ExpantaNum(1);
 game.overallMultiplier = ExpantaNum(1);
+class achievement {
+    constructor(criteria, text, reward) {
+        this.unlocked = false;
+        this.function = eval("if (" + criteria + ") {" + reward + "}");
+        this.text = text;
+    }
+}
 function save() {
     localStorage.setItem("money", JSON.stringify(game.money));
     localStorage.setItem("layers", JSON.stringify(game.layers));
 }
 function run() {
     document.getElementById("money").innerHTML = "$" + simplify(game.money);
-    /* if ((game.money.log10().pow(1/1.5).round().add(1).sub(boughtLayers)).greaterThanOrEqualTo(1)) {
-        document.getElementById("maxAllBtn").innerText = "Max All (+" + simplify(game.money.log10().pow(1/1.5).round().add(1).sub(boughtLayers), "^", 0) + " layers)";
-    } else {
-        document.getElementById("maxAllBtn").innerText = "Max All (+0 layers)";
-    } */
     for (let i = 2; i < game.layers.length + 1; i++) {
         game.layers[i - 2].count = game.layers[i - 1].count.mul(ExpantaNum(0.005).mul(game.overallMultiplier)).mul(game.layers[i - 1].multiplier).add(game.layers[i - 2].count);
         document.getElementById("layer" + (i - 1) + "count").innerHTML = simplify(game.layers[i - 2].count);
