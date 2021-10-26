@@ -58,7 +58,7 @@ function save() {
     localStorage.setItem("version", game.version);
 }
 function run() {
-    document.getElementById("money").innerHTML = "$" + simplify(game.money);
+    document.getElementById("money").innerHTML = "$" + simplify(game.money, "<sup>", 2, false);
     for (let i = 2; i < game.layers.length + 1; i++) {
         game.layers[i - 2].count = game.layers[i - 1].count.mul(ExpantaNum(0.005).mul(game.overallMultiplier)).mul(game.layers[i - 1].multiplier).add(game.layers[i - 2].count);
         document.getElementById("layer" + (i - 1) + "count").innerHTML = simplify(game.layers[i - 2].count);
@@ -73,7 +73,10 @@ function run() {
     game.money = game.money.add(game.layers[0].count.mul(ExpantaNum(0.005).mul(game.overallMultiplier)).mul(game.layers[0].multiplier));
     setTimeout(run, game.interval);
 }
-function simplify(num, separator, decimal) {
+function simplify(num, separator, decimal, abbreviate) {
+    if (abbreviate === undefined) {
+        abbreviate = true;
+    }
     if (separator === undefined) {
         separator = "<sup>";
     }
@@ -88,7 +91,7 @@ function simplify(num, separator, decimal) {
         } else if (num.slog().gt(2) && num.slog().lte(3)) {
             return ExpantaNum(10).pow(num.log10()).div(ExpantaNum(10).pow(num.log10().floor())).mul(10**decimal).floor().div(10**decimal).toFixed(decimal) + " × 10" + separator + num.log10().floor().toNumber().toLocaleString();
         } */
-        return toNumberName(num, "expantanum", true);
+        return toNumberName(num, "expantanum", abbreviate);
     } else if (num.abs().gte(1e6)) {
         return num.toNumber().toLocaleString(undefined, {maximumFractionDigits: 0});
     } else {
