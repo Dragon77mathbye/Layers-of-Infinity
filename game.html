@@ -77,14 +77,14 @@
 <body>
     <p id="money" class="mainText">$1.00</p>
     <button class="smallBtn" onclick="maxAll();" id="maxAllBtn">Max All (M)</button>
-    <button class="smallBtn" onclick="localStorage.clear(); location.reload();">Reset Progress and Update (Resetting won't be required later)</button>
+    <button class="smallBtn" onclick="localStorage.clear(); location.reload();" id="updateBtn" title="THIS RESETS YOUR PROGRESS">Update</button>
     <button class="smallBtn red" onclick="prestige();" id="prestigeBtn">Prestige</button>
     <div id="layers">
         <button onclick="buyLayer(1);" id="layer1">Purchase Layer 1 for $1.00</button>
         <span id="layer1count" class="count">0.00</span>
     </div>
-    <h2>Achievements</h2>
     <div id="achievements">
+        <h2>Achievements</h2>
     </div>
     <div id="about">
         <h2>About</h2>
@@ -92,9 +92,9 @@
         <p>Made by Dragon77mathbye / Aston</p>
         <p>My friend made this one: <a href="https://gooseterv.github.io/FactoryGame">Factory Game</a></p>
     </div>
-    <script src="ExpantaNum.js"></script>
-    <script src="toNumberName.js"></script>
-    <script type="text/javascript" src="main.js"></script>
-    <script src="achievements.js"></script>
+    <script src="toNumberName.js" type="text/javascript"></script>
+    <script src="ExpantaNum.js" type="text/javascript"></script>
+    <script src="main.js" type="text/javascript"></script>
+    <script src="achievements.js" type="text/javascript"></script>
 </body>
 </html>

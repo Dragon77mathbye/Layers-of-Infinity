@@ -1,6 +1,11 @@
 let game = [];
 let boughtLayers;
-
+game.latest = 12;
+if (localStorage.getItem("version") != undefined) {
+    game.version = Number(localStorage.getItem("version"));
+} else {
+    game.version = 12;
+}
 if (localStorage.getItem("achievements") != undefined) {
     game.achievements = JSON.parse(localStorage.getItem("achievements"));
 } else {
@@ -38,6 +43,11 @@ if (localStorage.getItem("achievementsHTML") != undefined) {
 }
 game.interval = 20;
 game.overallMultiplier = ExpantaNum(1);
+if (game.version < game.latest) {
+    document.getElementById("updateBtn").innerText = "Update to v" + game.latest + " from v" + game.version;
+} else {
+    document.getElementById("updateBtn").disabled = "true";
+}
 function save() {
     localStorage.setItem("money", JSON.stringify(game.money));
     localStorage.setItem("layers", JSON.stringify(game.layers));
@@ -45,6 +55,7 @@ function save() {
     localStorage.setItem("layersHTML", document.getElementById("layers").innerHTML);
     localStorage.setItem("achievements", JSON.stringify(game.achievements));
     localStorage.setItem("achievementsHTML", document.getElementById("achievements").innerHTML);
+    localStorage.setItem("version", game.version);
 }
 function run() {
     document.getElementById("money").innerHTML = "$" + simplify(game.money);
@@ -71,12 +82,12 @@ function simplify(num, separator, decimal) {
     }
     if (num.abs().gt("10^^10")) {
         return num.toStringWithDecimalPlaces(3);
-    } else if (num.abs().gte(1e12)) {
-        if (num.slog().gt(3)) {
+    } else if (num.abs().gte(1e9)) {
+        /* if (num.slog().gt(3)) {
             return ("10" + separator).repeat(num.slog().floor().toNumber() - 1) + ExpantaNum(10).tetr(num.slog().sub(num.slog().floor().sub(1))).toNumber().toLocaleString(undefined, {maximumFractionDigits: decimal, minimumFractionDigits: decimal});
         } else if (num.slog().gt(2) && num.slog().lte(3)) {
             return ExpantaNum(10).pow(num.log10()).div(ExpantaNum(10).pow(num.log10().floor())).mul(10**decimal).floor().div(10**decimal).toFixed(decimal) + " × 10" + separator + num.log10().floor().toNumber().toLocaleString();
-        }
+        } */
     } else if (num.abs().gte(1e6)) {
         return num.toNumber().toLocaleString(undefined, {maximumFractionDigits: 0});
     } else {
