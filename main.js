@@ -88,6 +88,7 @@ function simplify(num, separator, decimal) {
         } else if (num.slog().gt(2) && num.slog().lte(3)) {
             return ExpantaNum(10).pow(num.log10()).div(ExpantaNum(10).pow(num.log10().floor())).mul(10**decimal).floor().div(10**decimal).toFixed(decimal) + " × 10" + separator + num.log10().floor().toNumber().toLocaleString();
         } */
+        return toNumberName(num, "expantanum", true);
     } else if (num.abs().gte(1e6)) {
         return num.toNumber().toLocaleString(undefined, {maximumFractionDigits: 0});
     } else {
