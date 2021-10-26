@@ -10,10 +10,14 @@ game.layers[0].cost = ExpantaNum(1);
 game.layers[0].multiplier = ExpantaNum(1);
 game.overallMultiplier = ExpantaNum(1);
 class achievement {
-    constructor(criteria, text, reward) {
+    constructor(criteria, reward, title, criteriaText, rewardText, name) {
         this.unlocked = false;
-        this.function = eval("if (" + criteria + ") {" + reward + "}");
-        this.text = text;
+        this.title = title;
+        this.criteriaText = criteriaText;
+        this.rewardText = rewardText;
+        this.name = name;
+        eval("this.func = () => {if (" + criteria + " && !this.unlocked) {" + reward + "; this.unlocked = true; document.getElementById('ach_' + this.name).className = 'achievement bglime'}}");
+        this.intervalID = setInterval(this.func, 20);
     }
 }
 function save() {
@@ -27,7 +31,7 @@ function run() {
         document.getElementById("layer" + (i - 1) + "count").innerHTML = simplify(game.layers[i - 2].count);
     }
     for (let i = 0; i < game.layers.length; i++) {
-        if (game.money.greaterThanOrEqualTo(game.layers[i].cost)) {
+        if (game.money.gte(game.layers[i].cost)) {
             document.getElementById("layer" + (i + 1)).className = "lime";
         } else {
             document.getElementById("layer" + (i + 1)).className = "red";
@@ -44,22 +48,22 @@ function simplify(num, separator, decimal) {
     if (decimal === undefined) {
         decimal = 2;
     }
-    if (num.abs().greaterThan("10^^10")) {
+    if (num.abs().gt("10^^10")) {
         return num.toStringWithDecimalPlaces(3);
-    } else if (num.abs().greaterThanOrEqualTo(2**53)) {
-        if (num.slog().greaterThan(3)) {
+    } else if (num.abs().gte(2 ** 53)) {
+        if (num.slog().gt(3)) {
             return ("10" + separator).repeat(num.slog().floor().toNumber() - 1) + ExpantaNum(10).tetr(num.slog().sub(num.slog().floor().sub(1))).toNumber().toLocaleString(undefined, {maximumFractionDigits: decimal, minimumFractionDigits: decimal});
-        } else if (num.slog().greaterThan(2) && num.slog().lessThanOrEqualTo(3)) {
-            return ExpantaNum(10).pow(num.log10()).div(ExpantaNum(10).pow(num.log10().floor())).toFixed(decimal) + " × 10" + separator + num.log10().floor().toNumber().toLocaleString();
+        } else if (num.slog().gt(2) && num.slog().lte(3)) {
+            return ExpantaNum(10).pow(num.log10()).div(ExpantaNum(10).pow(num.log10().floor())).mul(10**decimal).floor().div(10**decimal).toFixed(decimal) + " × 10" + separator + num.log10().floor().toNumber().toLocaleString();
         }
-    } else if (num.abs().greaterThanOrEqualTo(1e6)) {
+    } else if (num.abs().gte(1e6)) {
         return num.toNumber().toLocaleString(undefined, {maximumFractionDigits: 0});
     } else {
         return num.toNumber().toLocaleString(undefined, {minimumFractionDigits: decimal, maximumFractionDigits: decimal});
     }
 }
 function maxAll() {
-    if (game.money.greaterThan("e1000")) {
+    if (game.money.gt("e1000")) {
         if (confirm("You can afford about " + simplify(game.money.log10().pow(1/1.5).round(), "^", 0) + " layers. This could crash your browser. Are you sure you want to continue?")) {
             for (let i = 0; i < game.layers.length; i++) {
                 while (buyLayer(i + 1)) {
@@ -84,7 +88,7 @@ document.onkeypress = function (e) {
     }
 }
 function buyLayer(num) {
-    if (game.money.greaterThanOrEqualTo(game.layers[num - 1].cost)) {
+    if (game.money.gte(game.layers[num - 1].cost)) {
         game.money = game.money.sub(game.layers[num - 1].cost);
         game.layers[num - 1].count = game.layers[num - 1].count.add(1);
         game.layers[num - 1].cost = game.layers[num - 1].cost.add(1).pow(1.4).sub(1);
