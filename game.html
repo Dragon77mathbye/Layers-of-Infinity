@@ -7,7 +7,7 @@
     <title>Layers of Infinity</title>
     <link rel="icon" href="good%20logo.png" type="image/x-icon">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&display=swap');
+        @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&display=swap");
         body {
             font-family: "Roboto Mono", monospace;
             background-color: black;
@@ -76,8 +76,8 @@
 </head>
 <body>
     <p id="money" class="mainText">$1.00</p>
-    <button class="smallBtn" onclick="maxAll();" id="maxAllBtn">Max All (M)</button>
-    <button class="smallBtn" onclick="localStorage.clear(); location.reload();" id="updateBtn" title="THIS RESETS YOUR PROGRESS">Update</button>
+    <button class="smallBtn" onclick="maxAll();" id="maxAllBtn">Max All [M]</button>
+    <button class="smallBtn" onclick="clearInterval(saveInterval); localStorage.clear(); location.reload();" id="updateBtn" title="THIS RESETS YOUR PROGRESS">Update</button>
     <button class="smallBtn red" onclick="prestige();" id="prestigeBtn">Prestige</button>
     <div id="layers">
         <button onclick="buyLayer(1);" id="layer1">Purchase Layer 1 for $1.00</button>

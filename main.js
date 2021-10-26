@@ -46,7 +46,7 @@ game.overallMultiplier = ExpantaNum(1);
 if (game.version < game.latest) {
     document.getElementById("updateBtn").innerText = "Update to v" + game.latest + " from v" + game.version;
 } else {
-    document.getElementById("updateBtn").disabled = "true";
+    document.getElementById("updateBtn").innerText = "Reset (v" + game.version + ")";
 }
 function save() {
     localStorage.setItem("money", JSON.stringify(game.money));
