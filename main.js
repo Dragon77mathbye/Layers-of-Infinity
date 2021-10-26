@@ -4,7 +4,7 @@ game.latest = 12;
 if (localStorage.getItem("version") != undefined) {
     game.version = Number(localStorage.getItem("version"));
 } else {
-    game.version = 12;
+    game.version = 0;
 }
 if (localStorage.getItem("achievements") != undefined) {
     game.achievements = JSON.parse(localStorage.getItem("achievements"));
