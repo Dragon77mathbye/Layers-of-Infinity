@@ -1,13 +1,35 @@
 let game = [];
-let boughtLayers = 0;
+let boughtLayers;
+
 game.achievements = [];
-game.money = ExpantaNum(1);
-game.layers = [];
+if (localStorage.getItem("money") != undefined) {
+    game.money = ExpantaNum(JSON.parse(localStorage.getItem("money")));
+} else {
+    game.money = ExpantaNum(1);
+}
+if (localStorage.getItem("layers") != undefined) {
+    game.layers = JSON.parse(localStorage.getItem("layers"));
+    for (let i = 0; i < game.layers.length; i++) {
+        game.layers[i].cost = ExpantaNum(game.layers[i].cost);
+        game.layers[i].count = ExpantaNum(game.layers[i].count);
+        game.layers[i].multiplier = ExpantaNum(game.layers[i].multiplier);
+    }
+} else {
+    game.layers = [];
+    game.layers[0] = {};
+    game.layers[0].count = ExpantaNum(0);
+    game.layers[0].cost = ExpantaNum(1);
+    game.layers[0].multiplier = ExpantaNum(1);
+}
+if (localStorage.getItem("boughtLayers") != undefined) {
+    boughtLayers = localStorage.getItem("boughtLayers");
+} else {
+    boughtLayers = 0;
+}
+if (localStorage.getItem("layersHTML") != undefined) {
+    document.getElementById("layers").innerHTML = localStorage.getItem("layersHTML");
+}
 game.interval = 20;
-game.layers[0] = {};
-game.layers[0].count = ExpantaNum(0);
-game.layers[0].cost = ExpantaNum(1);
-game.layers[0].multiplier = ExpantaNum(1);
 game.overallMultiplier = ExpantaNum(1);
 class achievement {
     constructor(criteria, reward, title, criteriaText, rewardText, name) {
@@ -23,6 +45,8 @@ class achievement {
 function save() {
     localStorage.setItem("money", JSON.stringify(game.money));
     localStorage.setItem("layers", JSON.stringify(game.layers));
+    localStorage.setItem("boughtLayers", boughtLayers.toString());
+    localStorage.setItem("layersHTML", document.getElementById("layers").innerHTML);
 }
 function run() {
     document.getElementById("money").innerHTML = "$" + simplify(game.money);
