@@ -1,7 +1,11 @@
 let game = [];
 let boughtLayers;
 
-game.achievements = [];
+if (localStorage.getItem("achievements") != undefined) {
+    game.achievements = JSON.parse(localStorage.getItem("achievements"));
+} else {
+    game.achievements = [];
+}
 if (localStorage.getItem("money") != undefined) {
     game.money = ExpantaNum(JSON.parse(localStorage.getItem("money")));
 } else {
@@ -22,31 +26,25 @@ if (localStorage.getItem("layers") != undefined) {
     game.layers[0].multiplier = ExpantaNum(1);
 }
 if (localStorage.getItem("boughtLayers") != undefined) {
-    boughtLayers = localStorage.getItem("boughtLayers");
+    boughtLayers = Number(localStorage.getItem("boughtLayers"));
 } else {
     boughtLayers = 0;
 }
 if (localStorage.getItem("layersHTML") != undefined) {
     document.getElementById("layers").innerHTML = localStorage.getItem("layersHTML");
 }
+if (localStorage.getItem("achievementsHTML") != undefined) {
+    document.getElementById("achievements").innerHTML = localStorage.getItem("achievementsHTML");
+}
 game.interval = 20;
 game.overallMultiplier = ExpantaNum(1);
-class achievement {
-    constructor(criteria, reward, title, criteriaText, rewardText, name) {
-        this.unlocked = false;
-        this.title = title;
-        this.criteriaText = criteriaText;
-        this.rewardText = rewardText;
-        this.name = name;
-        eval("this.func = () => {if (" + criteria + " && !this.unlocked) {" + reward + "; this.unlocked = true; document.getElementById('ach_' + this.name).className = 'achievement bglime'}}");
-        this.intervalID = setInterval(this.func, 20);
-    }
-}
 function save() {
     localStorage.setItem("money", JSON.stringify(game.money));
     localStorage.setItem("layers", JSON.stringify(game.layers));
     localStorage.setItem("boughtLayers", boughtLayers.toString());
     localStorage.setItem("layersHTML", document.getElementById("layers").innerHTML);
+    localStorage.setItem("achievements", JSON.stringify(game.achievements));
+    localStorage.setItem("achievementsHTML", document.getElementById("achievements").innerHTML);
 }
 function run() {
     document.getElementById("money").innerHTML = "$" + simplify(game.money);
@@ -63,7 +61,6 @@ function run() {
     }
     game.money = game.money.add(game.layers[0].count.mul(ExpantaNum(0.005).mul(game.overallMultiplier)).mul(game.layers[0].multiplier));
     setTimeout(run, game.interval);
-    save();
 }
 function simplify(num, separator, decimal) {
     if (separator === undefined) {
@@ -74,7 +71,7 @@ function simplify(num, separator, decimal) {
     }
     if (num.abs().gt("10^^10")) {
         return num.toStringWithDecimalPlaces(3);
-    } else if (num.abs().gte(2 ** 53)) {
+    } else if (num.abs().gte(1e12)) {
         if (num.slog().gt(3)) {
             return ("10" + separator).repeat(num.slog().floor().toNumber() - 1) + ExpantaNum(10).tetr(num.slog().sub(num.slog().floor().sub(1))).toNumber().toLocaleString(undefined, {maximumFractionDigits: decimal, minimumFractionDigits: decimal});
         } else if (num.slog().gt(2) && num.slog().lte(3)) {
@@ -125,7 +122,6 @@ function buyLayer(num) {
             game.layers[num].cost = ExpantaNum("10^" + num**1.5);
             game.layers[num].multiplier = ExpantaNum(1);
             document.getElementById("layers").innerHTML = document.getElementById("layers").innerHTML + '<br><button onclick="buyLayer(' + (num + 1) + ');" id="layer' + (num + 1) + '">Purchase Layer ' + (num + 1) + ' for $' + simplify(game.layers[num].cost) + '</button><span id="layer' + (num + 1) + 'count" class="count">0.00</span>';
-            document.getElementById("totalLayerCount").innerText = boughtLayers + " layers total";
         }
         return true;
     } else {
@@ -133,3 +129,4 @@ function buyLayer(num) {
     }
 }
 run();
+let saveInterval = setInterval(save, 100);

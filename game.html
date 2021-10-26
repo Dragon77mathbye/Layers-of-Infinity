@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="html">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -58,10 +58,9 @@
             width: fit-content;
         }
         .achievement {
-            height: 100px;
-            width: 100px;
+            height: 64px;
             text-align: center;
-            font-size: 12px;
+            font-size: 16px;
             border-color: white;
             border-width: 4px;
             border-style: solid;
@@ -78,14 +77,14 @@
 <body>
     <p id="money" class="mainText">$1.00</p>
     <button class="smallBtn" onclick="maxAll();" id="maxAllBtn">Max All (M)</button>
+    <button class="smallBtn" onclick="localStorage.clear(); location.reload();">Reset Progress and Update (Resetting won't be required later)</button>
     <button class="smallBtn red" onclick="prestige();" id="prestigeBtn">Prestige</button>
     <div id="layers">
         <button onclick="buyLayer(1);" id="layer1">Purchase Layer 1 for $1.00</button>
         <span id="layer1count" class="count">0.00</span>
     </div>
+    <h2>Achievements</h2>
     <div id="achievements">
-        <h2>Achievements</h2>
-        <p class="achievement" id="ach_test">this is a test</p>
     </div>
     <div id="about">
         <h2>About</h2>
