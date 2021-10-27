@@ -1,6 +1,6 @@
 let game = [];
 let boughtLayers;
-game.latest = 12;
+game.latest = 13;
 if (localStorage.getItem("version") == undefined) {
     game.version = 0;
 } else {
@@ -11,8 +11,11 @@ if (localStorage.getItem("achievements") == undefined) {
 } else {
     game.achievements = JSON.parse(localStorage.getItem("achievements"));
     for (let i = 0; i < game.achievements.length; i++) {
-        let output = localStorage.getItem('achf' + i).split("this").join("game.achievements[" + i + "]");
-        eval("game.achievements[i].func = " + output);
+        if (localStorage.getItem("achf" + i) != undefined) {
+            let output;
+            output = localStorage.getItem('achf' + i).split("this").join("game.achievements[" + i + "]");
+            eval("game.achievements[i].func = " + output);
+        }
         setInterval(game.achievements[i].func, 20);
     }
 }
