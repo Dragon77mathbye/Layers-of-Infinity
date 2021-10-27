@@ -95,15 +95,14 @@ function simplify(num, separator, decimal, abbreviate) {
     }
     if (num.abs().gt("10^^10")) {
         return num.toStringWithDecimalPlaces(3);
-    } else if (num.abs().gte(1e9)) {
-        /* if (num.slog().gt(3)) {
+    } else if (num.abs().gte("1e3003")) {
+        if (num.slog().gt(3)) {
             return ("10" + separator).repeat(num.slog().floor().toNumber() - 1) + ExpantaNum(10).tetr(num.slog().sub(num.slog().floor().sub(1))).toNumber().toLocaleString(undefined, {maximumFractionDigits: decimal, minimumFractionDigits: decimal});
         } else if (num.slog().gt(2) && num.slog().lte(3)) {
             return ExpantaNum(10).pow(num.log10()).div(ExpantaNum(10).pow(num.log10().floor())).mul(10**decimal).floor().div(10**decimal).toFixed(decimal) + " × 10" + separator + num.log10().floor().toNumber().toLocaleString();
-        } */
-        return toNumberName(num, "expantanum", abbreviate);
+        }
     } else if (num.abs().gte(1e6)) {
-        return num.toNumber().toLocaleString(undefined, {maximumFractionDigits: 0});
+        return toNumberName(num, "expantanum", abbreviate, ExpantaNum(3).sub(num.log10().floor().mod(3)));
     } else {
         return num.toNumber().toLocaleString(undefined, {minimumFractionDigits: decimal, maximumFractionDigits: decimal});
     }
