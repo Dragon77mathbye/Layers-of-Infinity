@@ -1,44 +1,51 @@
 let game = [];
 let boughtLayers;
 game.latest = 12;
-if (localStorage.getItem("version") != undefined) {
-    game.version = Number(localStorage.getItem("version"));
-} else {
+if (localStorage.getItem("version") == undefined) {
     game.version = 0;
-}
-if (localStorage.getItem("achievements") != undefined) {
-    game.achievements = JSON.parse(localStorage.getItem("achievements"));
 } else {
+    game.version = Number(localStorage.getItem("version"));
+}
+if (localStorage.getItem("achievements") == undefined) {
     game.achievements = [];
-}
-if (localStorage.getItem("money") != undefined) {
-    game.money = ExpantaNum(JSON.parse(localStorage.getItem("money")));
 } else {
-    game.money = ExpantaNum(1);
+    game.achievements = JSON.parse(localStorage.getItem("achievements"));
+    for (let i = 0; i < game.achievements.length; i++) {
+        let output = localStorage.getItem('achf' + i).split("this").join("game.achievements[" + i + "]");
+        eval("game.achievements[i].func = " + output);
+        setInterval(game.achievements[i].func, 20);
+    }
 }
-if (localStorage.getItem("layers") != undefined) {
+if (localStorage.getItem("money") == undefined) {
+    game.money = ExpantaNum(1);
+} else {
+    game.money = ExpantaNum(JSON.parse(localStorage.getItem("money")));
+}
+if (localStorage.getItem("layers") == undefined) {
+    game.layers = [];
+    game.layers[0] = {};
+    game.layers[0].count = ExpantaNum(0);
+    game.layers[0].cost = ExpantaNum(1);
+    game.layers[0].multiplier = ExpantaNum(1);
+} else {
     game.layers = JSON.parse(localStorage.getItem("layers"));
     for (let i = 0; i < game.layers.length; i++) {
         game.layers[i].cost = ExpantaNum(game.layers[i].cost);
         game.layers[i].count = ExpantaNum(game.layers[i].count);
         game.layers[i].multiplier = ExpantaNum(game.layers[i].multiplier);
     }
-} else {
-    game.layers = [];
-    game.layers[0] = {};
-    game.layers[0].count = ExpantaNum(0);
-    game.layers[0].cost = ExpantaNum(1);
-    game.layers[0].multiplier = ExpantaNum(1);
 }
-if (localStorage.getItem("boughtLayers") != undefined) {
-    boughtLayers = Number(localStorage.getItem("boughtLayers"));
-} else {
+if (localStorage.getItem("boughtLayers") == undefined) {
     boughtLayers = 0;
+} else {
+    boughtLayers = Number(localStorage.getItem("boughtLayers"));
 }
-if (localStorage.getItem("layersHTML") != undefined) {
+if (localStorage.getItem("layersHTML") == undefined) {
+} else {
     document.getElementById("layers").innerHTML = localStorage.getItem("layersHTML");
 }
-if (localStorage.getItem("achievementsHTML") != undefined) {
+if (localStorage.getItem("achievementsHTML") == undefined) {
+} else {
     document.getElementById("achievements").innerHTML = localStorage.getItem("achievementsHTML");
 }
 game.interval = 20;
@@ -56,6 +63,9 @@ function save() {
     localStorage.setItem("achievements", JSON.stringify(game.achievements));
     localStorage.setItem("achievementsHTML", document.getElementById("achievements").innerHTML);
     localStorage.setItem("version", game.version);
+    for (let i = 0; i < game.achievements.length; i++) {
+        localStorage.setItem("achf" + i, game.achievements[i].func);
+    }
 }
 function run() {
     document.getElementById("money").innerHTML = "$" + simplify(game.money, "<sup>", 2, false);
@@ -117,6 +127,16 @@ function maxAll() {
 }
 function prestige() {
     alert("Coming soon!");
+}
+function navigate(destination) {
+    let navigations = ["main", "achievements", "about"];
+    for (let i = 0; i < navigations.length; i++) {
+        if (navigations[i] === destination) {
+            document.getElementById(navigations[i]).style = "display: default;";
+        } else {
+            document.getElementById(navigations[i]).style = "display: none;";
+        }
+    }
 }
 document.onkeypress = function (e) {
     if (e.key === "m") {

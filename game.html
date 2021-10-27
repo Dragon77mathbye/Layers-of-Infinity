@@ -48,13 +48,20 @@
             background-color: #60c060;
             border-color: lime;
         }
+        .blue {
+            background-color: blue;
+        }
+        .blue:hover {
+            background-color: #8080ff;
+            border-color: blue;
+        }
         .count {
             float: right;
             position: relative;
             size: 0;
             top: 10px;
         }
-        .smallBtn {
+        .sameLine {
             width: fit-content;
         }
         .achievement {
@@ -75,20 +82,28 @@
     </style>
 </head>
 <body>
-    <p id="money" class="mainText">$1.00</p>
-    <button class="smallBtn" onclick="maxAll();" id="maxAllBtn">Max All [M]</button>
-    <button class="smallBtn" onclick="clearInterval(saveInterval); localStorage.clear(); location.reload();" id="updateBtn" title="THIS RESETS YOUR PROGRESS">Update</button>
-    <button class="smallBtn red" onclick="prestige();" id="prestigeBtn">Prestige</button>
-    <div id="layers">
-        <button onclick="buyLayer(1);" id="layer1">Purchase Layer 1 for $1.00</button>
-        <span id="layer1count" class="count">0.00</span>
+    <div id="navButtons">
+        <button class="sameLine blue" onclick="navigate('main')">Layers</button>
+        <button class="sameLine blue" onclick="navigate('achievements')">Achievements</button>
+        <button class="sameLine blue" onclick="navigate('about')">About</button>
     </div>
-    <div id="achievements">
+    <div id="main">
+        <p id="money" class="mainText">$1.00</p>
+        <button class="sameLine" onclick="maxAll();" id="maxAllBtn">Max All [M]</button>
+        <button class="sameLine" onclick="clearInterval(saveInterval); localStorage.clear(); localStorage.setItem('version', game.latest); location.reload();" id="updateBtn" title="THIS RESETS YOUR PROGRESS">Update</button>
+        <button class="sameLine red" onclick="prestige();" id="prestigeBtn">Prestige</button>
+        <div id="layers">
+            <button onclick="buyLayer(1);" id="layer1">Purchase Layer 1 for $1.00</button>
+            <span id="layer1count" class="count">0.00</span>
+        </div>
+    </div>
+    <div id="achievements" style="display: none;">
         <h2>Achievements</h2>
     </div>
-    <div id="about">
+    <div id="about" style="display: none;">
         <h2>About</h2>
         <p>The school thinks they can block all games, but they can't if I'm the one who made it!</p>
+        <p>This game started out as just a number on a white page with one button that added to the number.</p>
         <p>Made by Dragon77mathbye / Aston</p>
         <p>My friend made this one: <a href="https://gooseterv.github.io/FactoryGame">Factory Game</a></p>
     </div>

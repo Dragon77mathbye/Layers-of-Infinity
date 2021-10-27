@@ -14,7 +14,7 @@ if (localStorage.getItem("achievements") == undefined) {
     game.achievements[1] = new achievement("game.money.gte(10)", undefined, "First Cash", "Have $10", "No Reward", "money10", "game.money");
     game.achievements[2] = new achievement("game.layers[1].count >= 1", "game.layers[0].count = game.layers[0].count.add(10)", "Exponential Production", "Buy the second layer", "+10 first layers", "secondLayer", "game.layers[1]");
     game.achievements[3] = new achievement("game.layers[2].count >= 1", undefined, "Progress", "Buy the third layer", "No Reward", "thirdLayer", "game.layers[2]");
-    game.achievements[4] = new achievement("game.layers[9].count >= 1", "game.money = game.money.mul(2)", "River of Money", "Buy the tenth layer", "Double Money", "tenthLayer", "game.layers[9]");
+    game.achievements[4] = new achievement("game.layers[9].count >= 1", "game.money = game.money.add(1e27)", "River of Money", "Buy the tenth layer", "+$1 Oc", "tenthLayer", "game.layers[9]");
 }
 function outputAchievements() {
     let output = "";
