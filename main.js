@@ -56,9 +56,9 @@ if (localStorage.getItem("achievementsHTML") != undefined) {
 }
 game.interval = 20;
 if (game.version < game.latest) {
-    document.getElementById("updateBtn").innerText = "Update to v" + game.latest + " from v" + game.version;
+    document.getElementById("updateBtn").innerHTML = "Update to v" + game.latest + " from v" + game.version;
 } else {
-    document.getElementById("updateBtn").innerText = "Reset (v" + game.version + ")";
+    document.getElementById("updateBtn").innerHTML = "Reset (v" + game.version + ")";
 }
 function save() {
     localStorage.setItem("money", JSON.stringify(game.money));
@@ -87,10 +87,10 @@ function run() {
         }
     }
     if (game.money.log10().gte(10)) {
-        document.getElementById("prestigeBtn").innerText = "Prestige for x" + simplify(game.money.log10().div(10), "<sup>", 4, true) + " overall multiplier";
+        document.getElementById("prestigeBtn").innerHTML = "Prestige for x" + simplify(game.money.log10().div(10), "<sup>", 4, true) + " overall multiplier";
         document.getElementById("prestigeBtn").className = "sameLine lime";
     } else {
-        document.getElementById("prestigeBtn").innerText = "Not eligible to prestige";
+        document.getElementById("prestigeBtn").innerHTML = "Not eligible to prestige";
         document.getElementById("prestigeBtn").className = "sameLine red";
     }
     game.money = game.money.add(game.layers[0].count.mul(ExpantaNum(0.005).mul(game.overallMultiplier)).mul(game.layers[0].multiplier));
