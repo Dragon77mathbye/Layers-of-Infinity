@@ -43,16 +43,18 @@ if (localStorage.getItem("boughtLayers") == undefined) {
 } else {
     boughtLayers = Number(localStorage.getItem("boughtLayers"));
 }
-if (localStorage.getItem("layersHTML") == undefined) {
+if (localStorage.getItem("overallMultiplier") != undefined) {
+    overallMultiplier = ExpantaNum(JSON.parse(localStorage.getItem("overallMultiplier")));
 } else {
+    game.overallMultiplier = ExpantaNum(1);
+}
+if (localStorage.getItem("layersHTML") != undefined) {
     document.getElementById("layers").innerHTML = localStorage.getItem("layersHTML");
 }
-if (localStorage.getItem("achievementsHTML") == undefined) {
-} else {
+if (localStorage.getItem("achievementsHTML") != undefined) {
     document.getElementById("achievements").innerHTML = localStorage.getItem("achievementsHTML");
 }
 game.interval = 20;
-game.overallMultiplier = ExpantaNum(1);
 if (game.version < game.latest) {
     document.getElementById("updateBtn").innerText = "Update to v" + game.latest + " from v" + game.version;
 } else {
@@ -66,6 +68,7 @@ function save() {
     localStorage.setItem("achievements", JSON.stringify(game.achievements));
     localStorage.setItem("achievementsHTML", document.getElementById("achievements").innerHTML);
     localStorage.setItem("version", game.version);
+    localStorage.setItem("overallMultiplier", JSON.stringify(game.overallMultiplier));
     for (let i = 0; i < game.achievements.length; i++) {
         localStorage.setItem("achf" + i, game.achievements[i].func);
     }
@@ -82,6 +85,13 @@ function run() {
         } else {
             document.getElementById("layer" + (i + 1)).className = "red";
         }
+    }
+    if (game.money.log10().gte(10)) {
+        document.getElementById("prestigeBtn").innerText = "Prestige for x" + simplify(game.money.log10().div(10), "<sup>", 4, true) + " overall multiplier";
+        document.getElementById("prestigeBtn").className = "sameLine lime";
+    } else {
+        document.getElementById("prestigeBtn").innerText = "Not eligible to prestige";
+        document.getElementById("prestigeBtn").className = "sameLine red";
     }
     game.money = game.money.add(game.layers[0].count.mul(ExpantaNum(0.005).mul(game.overallMultiplier)).mul(game.layers[0].multiplier));
     setTimeout(run, game.interval);
@@ -128,7 +138,16 @@ function maxAll() {
     }
 }
 function prestige() {
-    alert("Coming soon!");
+    if (game.money.log10().gte(10)) {
+        game.overallMultiplier = game.overallMultiplier.mul(game.money.log10().div(10));
+        game.money = ExpantaNum(1);
+        for (let i = 0; i < game.layers.length; i++) {
+            game.layers[i].count = ExpantaNum(0);
+            game.layers[i].multiplier = ExpantaNum(1);
+            game.layers[i].cost = ExpantaNum("10^" + i**1.5);
+            document.getElementById("layer" + (i + 1)).innerHTML = "Purchase Layer " + (i + 1).toLocaleString() + " for $" + simplify(game.layers[i].cost);
+        }
+    }
 }
 function navigate(destination) {
     let navigations = ["main", "achievements", "about"];

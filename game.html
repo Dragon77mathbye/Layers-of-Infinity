@@ -91,6 +91,7 @@
     <div id="main">
         <p id="money" class="mainText">$1.00</p>
         <button class="sameLine" onclick="maxAll();" id="maxAllBtn">Max All [M]</button>
+        <button class="sameLine" onclick="localStorage.clear(); location.reload();">Force Reset</button>
         <button class="sameLine" onclick="clearInterval(saveInterval); localStorage.clear(); localStorage.setItem('version', game.latest); location.reload();" id="updateBtn" title="THIS RESETS YOUR PROGRESS">Update</button>
         <button class="sameLine red" onclick="prestige();" id="prestigeBtn">Prestige</button>
         <div id="layers">
