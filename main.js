@@ -44,7 +44,7 @@ if (localStorage.getItem("boughtLayers") == undefined) {
     boughtLayers = Number(localStorage.getItem("boughtLayers"));
 }
 if (localStorage.getItem("overallMultiplier") != undefined) {
-    overallMultiplier = ExpantaNum(JSON.parse(localStorage.getItem("overallMultiplier")));
+    game.overallMultiplier = ExpantaNum(JSON.parse(localStorage.getItem("overallMultiplier")));
 } else {
     game.overallMultiplier = ExpantaNum(1);
 }
