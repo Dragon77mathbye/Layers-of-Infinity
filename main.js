@@ -108,7 +108,7 @@ function simplify(num, separator, decimal, abbreviate) {
     }
     if (num.abs().gt("10^^10")) {
         return num.toStringWithDecimalPlaces(3);
-    } else if (num.abs().gte("1e3003")) {
+    } else if (num.abs().gte("1e3000")) {
         if (num.slog().gt(3)) {
             return ("10" + separator).repeat(num.slog().floor().toNumber() - 1) + ExpantaNum(10).tetr(num.slog().sub(num.slog().floor().sub(1))).toNumber().toLocaleString(undefined, {maximumFractionDigits: decimal, minimumFractionDigits: decimal});
         } else if (num.slog().gt(2) && num.slog().lte(3)) {
