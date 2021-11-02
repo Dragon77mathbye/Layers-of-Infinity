@@ -13,6 +13,7 @@
             background-image: linear-gradient(90deg, darkorange, purple, black);
             height: 100%;
             color: white;
+            user-select: none;
         }
         .mainText {
             font-size: 48px;
@@ -84,9 +85,9 @@
 </head>
 <body>
     <div id="navButtons">
-        <button class="sameLine blue" onclick="navigate('main')">Layers</button>
-        <button class="sameLine blue" onclick="navigate('achievements')">Achievements</button>
-        <button class="sameLine blue" onclick="navigate('about')">About</button>
+        <button class="sameLine blue" onclick="navigate('main');">Layers</button>
+        <button class="sameLine blue" onclick="navigate('achievements');">Achievements</button>
+        <button class="sameLine blue" onclick="navigate('about');">About</button>
     </div>
     <div id="main">
         <p id="money" class="mainText">$1.00</p>

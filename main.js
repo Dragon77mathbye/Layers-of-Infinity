@@ -1,6 +1,6 @@
 let game = [];
 let boughtLayers;
-game.latest = 14;
+game.latest = 15;
 if (localStorage.getItem("prestigeMultiplier") == undefined) {
     game.prestigeMultiplier = ExpantaNum(1);
 } else {
@@ -95,9 +95,7 @@ function run() {
             } else {
                 layerCount.style.display = "none";
                 layer.style.display = "none";
-                if (layerBr !== null) {
-                    layerBr.remove();
-                }
+                layerBr.style.display = "none";
             }
         } else {
             layerCount.innerHTML = simplify(game.layers[i - 2].count);
