@@ -1,6 +1,11 @@
 let game = [];
 let boughtLayers;
 game.latest = 13;
+if (localStorage.getItem("prestigeMultiplier") == undefined) {
+    game.prestigeMultiplier = ExpantaNum(1);
+} else {
+    game.prestigeMultiplier = ExpantaNum(JSON.parse(localStorage.getItem("prestigeMultiplier")));
+}
 if (localStorage.getItem("version") == undefined) {
     game.version = 0;
 } else {
@@ -55,6 +60,7 @@ if (localStorage.getItem("achievementsHTML") != undefined) {
     document.getElementById("achievements").innerHTML = localStorage.getItem("achievementsHTML");
 }
 game.interval = 20;
+let prestigeMul = game.money.log10().div(10).div(game.prestigeMultiplier);
 if (game.version < game.latest) {
     document.getElementById("updateBtn").innerHTML = "Update to v" + game.latest + " from v" + game.version;
 } else {
@@ -69,6 +75,7 @@ function save() {
     localStorage.setItem("achievementsHTML", document.getElementById("achievements").innerHTML);
     localStorage.setItem("version", game.version);
     localStorage.setItem("overallMultiplier", JSON.stringify(game.overallMultiplier));
+	localStorage.setItem("prestigeMultiplier", JSON.stringify(game.prestigeMultiplier));
     for (let i = 0; i < game.achievements.length; i++) {
         localStorage.setItem("achf" + i, game.achievements[i].func);
     }
@@ -77,7 +84,26 @@ function run() {
     document.getElementById("money").innerHTML = "$" + simplify(game.money, "<sup>", 2, false);
     for (let i = 2; i < game.layers.length + 1; i++) {
         game.layers[i - 2].count = game.layers[i - 1].count.mul(ExpantaNum(0.005).mul(game.overallMultiplier)).mul(game.layers[i - 1].multiplier).add(game.layers[i - 2].count);
-        document.getElementById("layer" + (i - 1) + "count").innerHTML = simplify(game.layers[i - 2].count);
+        let layerCount = document.getElementById("layer" + (i - 1) + "count");
+        let layer = document.getElementById("layer" + (i - 1));
+        let layerBr = document.getElementById("layer" + (i - 1) + "b");
+        if (game.layers.length >= 10) {
+            if (i - 2 <= 4 || game.layers.length - (i - 2) <= 5) {
+                layerCount.innerHTML = simplify(game.layers[i - 2].count);
+                layerCount.style.display = "default";
+                layer.style.display = "default";
+            } else {
+                layerCount.style.display = "none";
+                layer.style.display = "none";
+                if (layerBr !== null) {
+                    layerBr.remove();
+                }
+            }
+        } else {
+            layerCount.innerHTML = simplify(game.layers[i - 2].count);
+            layerCount.style.display = "default";
+            layer.style.display = "default";
+        }
     }
     for (let i = 0; i < game.layers.length; i++) {
         if (game.money.gte(game.layers[i].cost)) {
@@ -86,14 +112,15 @@ function run() {
             document.getElementById("layer" + (i + 1)).className = "red";
         }
     }
-    if (game.money.log10().gte(10)) {
-        document.getElementById("prestigeBtn").innerHTML = "Prestige for x" + simplify(game.money.log10().div(10), "<sup>", 4, true) + " overall multiplier";
+    if (prestigeMul.gte(1)) {
+        document.getElementById("prestigeBtn").innerHTML = "Prestige for x" + simplify(prestigeMul, "<sup>", 4, true) + " overall multiplier";
         document.getElementById("prestigeBtn").className = "sameLine lime";
     } else {
         document.getElementById("prestigeBtn").innerHTML = "Not eligible to prestige";
         document.getElementById("prestigeBtn").className = "sameLine red";
     }
     game.money = game.money.add(game.layers[0].count.mul(ExpantaNum(0.005).mul(game.overallMultiplier)).mul(game.layers[0].multiplier));
+    prestigeMul = game.money.log10().div(10).div(game.prestigeMultiplier);
     setTimeout(run, game.interval);
 }
 function simplify(num, separator, decimal, abbreviate) {
@@ -121,7 +148,7 @@ function simplify(num, separator, decimal, abbreviate) {
     }
 }
 function maxAll() {
-    if (game.money.gt("e1000")) {
+    if (game.money.gt("10^3000")) {
         if (confirm("You can afford about " + simplify(game.money.log10().pow(1/1.5).round(), "^", 0) + " layers. This could crash your browser. Are you sure you want to continue?")) {
             for (let i = 0; i < game.layers.length; i++) {
                 while (buyLayer(i + 1)) {
@@ -138,8 +165,9 @@ function maxAll() {
     }
 }
 function prestige() {
-    if (game.money.log10().gte(10)) {
-        game.overallMultiplier = game.overallMultiplier.mul(game.money.log10().div(10));
+    if (prestigeMul.gte(1)) {
+        game.overallMultiplier = game.overallMultiplier.mul(prestigeMul);
+        game.prestigeMultiplier = game.prestigeMultiplier.mul(prestigeMul);
         game.money = ExpantaNum(1);
         for (let i = 0; i < game.layers.length; i++) {
             game.layers[i].count = ExpantaNum(0);
@@ -160,8 +188,10 @@ function navigate(destination) {
     }
 }
 document.onkeypress = function (e) {
-    if (e.key === "m") {
+    if (e.key === "m" || e.key === "M") {
         maxAll();
+    } else if (e.key === "p" || e.key === "P") {
+        prestige();
     }
 }
 function buyLayer(num) {
@@ -177,7 +207,7 @@ function buyLayer(num) {
             game.layers[num].count = ExpantaNum(0);
             game.layers[num].cost = ExpantaNum("10^" + num**1.5);
             game.layers[num].multiplier = ExpantaNum(1);
-            document.getElementById("layers").innerHTML = document.getElementById("layers").innerHTML + '<br><button onclick="buyLayer(' + (num + 1) + ');" id="layer' + (num + 1) + '">Purchase Layer ' + (num + 1) + ' for $' + simplify(game.layers[num].cost) + '</button><span id="layer' + (num + 1) + 'count" class="count">0.00</span>';
+            document.getElementById("layers").innerHTML = document.getElementById("layers").innerHTML + '<br id="layer' + (num + 1) + 'b"><button onclick="buyLayer(' + (num + 1) + ');" id="layer' + (num + 1) + '">Purchase Layer ' + (num + 1) + ' for $' + simplify(game.layers[num].cost) + '</button><span id="layer' + (num + 1) + 'count" class="count">0.00</span>';
         }
         return true;
     } else {
