@@ -1,6 +1,6 @@
 let game = [];
 let boughtLayers;
-game.latest = 13;
+game.latest = 14;
 if (localStorage.getItem("prestigeMultiplier") == undefined) {
     game.prestigeMultiplier = ExpantaNum(1);
 } else {
@@ -75,7 +75,7 @@ function save() {
     localStorage.setItem("achievementsHTML", document.getElementById("achievements").innerHTML);
     localStorage.setItem("version", game.version);
     localStorage.setItem("overallMultiplier", JSON.stringify(game.overallMultiplier));
-    localStorage.setItem("prestigeMultiplier", JSON.stringify(game.prestigeMultiplier));
+	localStorage.setItem("prestigeMultiplier", JSON.stringify(game.prestigeMultiplier));
     for (let i = 0; i < game.achievements.length; i++) {
         localStorage.setItem("achf" + i, game.achievements[i].func);
     }
@@ -84,7 +84,26 @@ function run() {
     document.getElementById("money").innerHTML = "$" + simplify(game.money, "<sup>", 2, false);
     for (let i = 2; i < game.layers.length + 1; i++) {
         game.layers[i - 2].count = game.layers[i - 1].count.mul(ExpantaNum(0.005).mul(game.overallMultiplier)).mul(game.layers[i - 1].multiplier).add(game.layers[i - 2].count);
-        document.getElementById("layer" + (i - 1) + "count").innerHTML = simplify(game.layers[i - 2].count);
+        let layerCount = document.getElementById("layer" + (i - 1) + "count");
+        let layer = document.getElementById("layer" + (i - 1));
+        let layerBr = document.getElementById("layer" + (i - 1) + "b");
+        if (game.layers.length >= 10) {
+            if (i - 2 <= 4 || game.layers.length - (i - 2) <= 5) {
+                layerCount.innerHTML = simplify(game.layers[i - 2].count);
+                layerCount.style.display = "default";
+                layer.style.display = "default";
+            } else {
+                layerCount.style.display = "none";
+                layer.style.display = "none";
+                if (layerBr !== null) {
+                    layerBr.remove();
+                }
+            }
+        } else {
+            layerCount.innerHTML = simplify(game.layers[i - 2].count);
+            layerCount.style.display = "default";
+            layer.style.display = "default";
+        }
     }
     for (let i = 0; i < game.layers.length; i++) {
         if (game.money.gte(game.layers[i].cost)) {
@@ -116,7 +135,7 @@ function simplify(num, separator, decimal, abbreviate) {
     }
     if (num.abs().gt("10^^10")) {
         return num.toStringWithDecimalPlaces(3);
-    } else if (num.abs().gte("1e3003")) {
+    } else if (num.abs().gte("1e3000")) {
         if (num.slog().gt(3)) {
             return ("10" + separator).repeat(num.slog().floor().toNumber() - 1) + ExpantaNum(10).tetr(num.slog().sub(num.slog().floor().sub(1))).toNumber().toLocaleString(undefined, {maximumFractionDigits: decimal, minimumFractionDigits: decimal});
         } else if (num.slog().gt(2) && num.slog().lte(3)) {
@@ -129,7 +148,7 @@ function simplify(num, separator, decimal, abbreviate) {
     }
 }
 function maxAll() {
-    if (game.money.gt("e1000")) {
+    if (game.money.gt("10^3000")) {
         if (confirm("You can afford about " + simplify(game.money.log10().pow(1/1.5).round(), "^", 0) + " layers. This could crash your browser. Are you sure you want to continue?")) {
             for (let i = 0; i < game.layers.length; i++) {
                 while (buyLayer(i + 1)) {
@@ -188,7 +207,7 @@ function buyLayer(num) {
             game.layers[num].count = ExpantaNum(0);
             game.layers[num].cost = ExpantaNum("10^" + num**1.5);
             game.layers[num].multiplier = ExpantaNum(1);
-            document.getElementById("layers").innerHTML = document.getElementById("layers").innerHTML + '<br><button onclick="buyLayer(' + (num + 1) + ');" id="layer' + (num + 1) + '">Purchase Layer ' + (num + 1) + ' for $' + simplify(game.layers[num].cost) + '</button><span id="layer' + (num + 1) + 'count" class="count">0.00</span>';
+            document.getElementById("layers").innerHTML = document.getElementById("layers").innerHTML + '<br id="layer' + (num + 1) + 'b"><button onclick="buyLayer(' + (num + 1) + ');" id="layer' + (num + 1) + '">Purchase Layer ' + (num + 1) + ' for $' + simplify(game.layers[num].cost) + '</button><span id="layer' + (num + 1) + 'count" class="count">0.00</span>';
         }
         return true;
     } else {
