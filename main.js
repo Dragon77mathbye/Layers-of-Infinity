@@ -1,6 +1,6 @@
 let game = [];
 let boughtLayers;
-game.latest = 13;
+game.latest = 14;
 if (localStorage.getItem("prestigeMultiplier") == undefined) {
     game.prestigeMultiplier = ExpantaNum(1);
 } else {
