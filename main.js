@@ -1,6 +1,11 @@
 let game = [];
 let boughtLayers;
 game.latest = 13;
+if (localStorage.getItem("prestigeMultiplier") == undefined) {
+    game.prestigeMultiplier = ExpantaNum(1);
+} else {
+    game.prestigeMultiplier = ExpantaNum(JSON.parse(localStorage.getItem("prestigeMultiplier")));
+}
 if (localStorage.getItem("version") == undefined) {
     game.version = 0;
 } else {
@@ -55,6 +60,7 @@ if (localStorage.getItem("achievementsHTML") != undefined) {
     document.getElementById("achievements").innerHTML = localStorage.getItem("achievementsHTML");
 }
 game.interval = 20;
+let prestigeMul = game.money.log10().div(10).div(game.prestigeMultiplier);
 if (game.version < game.latest) {
     document.getElementById("updateBtn").innerHTML = "Update to v" + game.latest + " from v" + game.version;
 } else {
@@ -69,6 +75,7 @@ function save() {
     localStorage.setItem("achievementsHTML", document.getElementById("achievements").innerHTML);
     localStorage.setItem("version", game.version);
     localStorage.setItem("overallMultiplier", JSON.stringify(game.overallMultiplier));
+    localStorage.setItem("prestigeMultiplier", JSON.stringify(game.prestigeMultiplier));
     for (let i = 0; i < game.achievements.length; i++) {
         localStorage.setItem("achf" + i, game.achievements[i].func);
     }
@@ -86,14 +93,15 @@ function run() {
             document.getElementById("layer" + (i + 1)).className = "red";
         }
     }
-    if (game.money.log10().gte(10)) {
-        document.getElementById("prestigeBtn").innerHTML = "Prestige for x" + simplify(game.money.log10().div(10), "<sup>", 4, true) + " overall multiplier";
+    if (prestigeMul.gte(1)) {
+        document.getElementById("prestigeBtn").innerHTML = "Prestige for x" + simplify(prestigeMul, "<sup>", 4, true) + " overall multiplier";
         document.getElementById("prestigeBtn").className = "sameLine lime";
     } else {
         document.getElementById("prestigeBtn").innerHTML = "Not eligible to prestige";
         document.getElementById("prestigeBtn").className = "sameLine red";
     }
     game.money = game.money.add(game.layers[0].count.mul(ExpantaNum(0.005).mul(game.overallMultiplier)).mul(game.layers[0].multiplier));
+    prestigeMul = game.money.log10().div(10).div(game.prestigeMultiplier);
     setTimeout(run, game.interval);
 }
 function simplify(num, separator, decimal, abbreviate) {
@@ -138,8 +146,9 @@ function maxAll() {
     }
 }
 function prestige() {
-    if (game.money.log10().gte(10)) {
-        game.overallMultiplier = game.overallMultiplier.mul(game.money.log10().div(10));
+    if (prestigeMul.gte(1)) {
+        game.overallMultiplier = game.overallMultiplier.mul(prestigeMul);
+        game.prestigeMultiplier = game.prestigeMultiplier.mul(prestigeMul);
         game.money = ExpantaNum(1);
         for (let i = 0; i < game.layers.length; i++) {
             game.layers[i].count = ExpantaNum(0);
@@ -160,8 +169,10 @@ function navigate(destination) {
     }
 }
 document.onkeypress = function (e) {
-    if (e.key === "m") {
+    if (e.key === "m" || e.key === "M") {
         maxAll();
+    } else if (e.key === "p" || e.key === "P") {
+        prestige();
     }
 }
 function buyLayer(num) {
